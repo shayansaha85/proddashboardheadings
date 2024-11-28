@@ -8,14 +8,37 @@ def create_text_image(text, font_path, output_path):
     canvas_width = 904
     canvas_height = 50
     font_color = (1, 173, 210, 255)
-    font_size = 58
+    
+    # Initial font size to start calculation
+    font_size = 10  
     image = Image.new("RGBA", (canvas_width, canvas_height), (255, 255, 255, 0))
-    font = ImageFont.truetype(font_path, int(font_size))
     draw = ImageDraw.Draw(image)
+    
+    # Dynamically adjust font size to fit the canvas
+    while True:
+        font = ImageFont.truetype(font_path, font_size)
+        bbox = draw.textbbox((0, 0), text.upper(), font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        
+        # Check if the text fits within the canvas
+        if text_width <= canvas_width and text_height < canvas_height-6:
+            font_size += 1  # Increment font size
+        else:
+            font_size -= 1  # Revert to the last valid font size
+            break
+    
+    # Use the adjusted font size
+    font = ImageFont.truetype(font_path, font_size)
     bbox = draw.textbbox((0, 0), text.upper(), font=font)
     text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+    
+    # Center the text
     x = (canvas_width - text_width) // 2
     y = 0
+    
+    # Draw the text
     draw.text((x, y), text.upper(), font=font, fill=font_color)
     image.save(output_path, "PNG")
 
