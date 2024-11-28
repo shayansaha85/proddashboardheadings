@@ -5,7 +5,7 @@ def create_text_image(text, font_path, output_path):
     canvas_width = 904
     canvas_height = 50
     font_color = (1, 173, 210, 255)
-    font_size = 50
+    font_size = 55
     image = Image.new("RGBA", (canvas_width, canvas_height), (255, 255, 255, 0))
     font = ImageFont.truetype(font_path, int(font_size))
     draw = ImageDraw.Draw(image)
